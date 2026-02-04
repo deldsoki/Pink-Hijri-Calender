@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hijri Calendar</title>
+<script src="https://cdn.jsdelivr.net/npm/hijri-date/lib/safe.js"></script>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#ffe6f2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+}
+
+.calendar{
+  background:#fff0f6;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 4px 15px rgba(255,105,180,0.3);
+  width:320px;
+}
+
+.header{
+  text-align:center;
+  font-weight:bold;
+  font-size:18px;
+  color:#d63384;
+  margin-bottom:15px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:5px;
+}
+
+.day-name{
+  font-weight:bold;
+  text-align:center;
+  color:#ff69b4;
+}
+
+.day{
+  text-align:center;
+  padding:8px;
+  border-radius:10px;
+  background:#ffe4f0;
+  font-size:14px;
+}
+
+.today{
+  background:#ff69b4;
+  color:white;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calendar">
+  <div class="header" id="monthYear"></div>
+  <div class="grid" id="calendarGrid"></div>
+</div>
+
+<script>
+const hijri = new HijriDate();
+const today = new HijriDate();
+
+const monthNames = [
+"Muḥarram","Ṣafar","Rabīʿ al-Awwal","Rabīʿ ath-Thānī",
+"Jumādā al-Ūlā","Jumādā ath-Thāniyah","Rajab","Shaʿbān",
+"Ramaḍān","Shawwāl","Dhū al-Qaʿdah","Dhū al-Ḥijjah"
+];
+
+const dayNames = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+
+const grid = document.getElementById("calendarGrid");
+
+dayNames.forEach(d=>{
+  const el=document.createElement("div");
+  el.className="day-name";
+  el.textContent=d;
+  grid.appendChild(el);
+});
+
+const month = hijri.getMonth();
+const year = hijri.getFullYear();
+
+document.getElementById("monthYear").textContent =
+monthNames[month]+" "+year+" AH";
+
+const firstDay = new HijriDate(year, month, 1);
+const startDay = firstDay.getDay();
+
+const daysInMonth = new HijriDate(year, month+1, 0).getDate();
+
+for(let i=0;i<startDay;i++){
+  grid.appendChild(document.createElement("div"));
+}
+
+for(let d=1; d<=daysInMonth; d++){
+  const dayEl=document.createElement("div");
+  dayEl.className="day";
+  dayEl.textContent=d;
+
+  if(
+    d===today.getDate() &&
+    month===today.getMonth() &&
+    year===today.getFullYear()
+  ){
+    dayEl.classList.add("today");
+  }
+
+  grid.appendChild(dayEl);
+}
+</script>
+
+</body>
+</html>
